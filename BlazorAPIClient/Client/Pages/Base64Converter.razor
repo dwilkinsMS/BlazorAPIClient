@@ -1,0 +1,60 @@
+﻿@page "/base64converter"
+
+
+
+<div class="container col-9">
+    <h3>Base 64 Converter</h3>
+
+    <span class="text-danger">@ErrorMesssage</span>
+
+    <div class="form-group">
+        <textarea class="form-control col-md-6" placeholder="Non Base64" @bind-value="NonBase64Body" @bind-value:event="oninput"></textarea>
+        <small class="form-text text-muted">This is the value to encode to Base64</small>
+    </div>
+
+
+    <div>
+        <button class="btn btn-primary" type="button" @onclick="Encode"><span class="oi oi-arrow-thick-bottom"></span>Encode</button>
+        <button class="btn btn-success" type="button" @onclick="Decode"><span class="oi oi-arrow-thick-top"></span>Decode</button>
+    </div>
+    <br />
+
+    <div class="form-group">
+        <textarea class="form-control col-md-6" placeholder="Base64" @bind-value="Base64Body" @bind-value:event="oninput"></textarea>
+        <small class="form-text text-muted">This is the value that has been encoded</small>
+    </div>
+</div>
+
+@code {
+
+    public string NonBase64Body { get; set; }
+    public string Base64Body { get; set; }
+    public string ErrorMesssage { get; set; }
+
+    private void Encode()
+    {
+        if (!string.IsNullOrEmpty(NonBase64Body))
+        {
+            var plainTextBytes = Encoding.UTF8.GetBytes(NonBase64Body);
+            Base64Body = Convert.ToBase64String(plainTextBytes);
+        }
+        else
+            {
+                ErrorMesssage = "To Encode, the Non-Base64 text must not be empty or null";
+            }
+    }
+
+    private void Decode()
+    {
+        if (!string.IsNullOrEmpty(Base64Body))
+        {
+            var base64bytes = Convert.FromBase64String(Base64Body);
+            NonBase64Body = Encoding.UTF8.GetString(base64bytes);
+        }
+        else
+        {
+            ErrorMesssage = "To Decode, the Base64 text must not be empty or null";
+        }
+
+    }
+}
